@@ -2,6 +2,325 @@
   
     
         "post0": {
+            "title": "Building a Jupyter development environment for microcontrollers",
+            "content": "micropython magic . -- Taken from https://github.com/v923z/micropython-usermod/blob/master/docs/micropython-usermod.ipynb -- . To make the usage a bit more convenient, we will just register a magic method here to run micropython directly from the notebook. If you don&#39;t know what ipython magics are, you can read more at https://ipython.readthedocs.io/en/stable/interactive/magics.html. In any case, we are going to take the contents of a code cell, and pass it to micropython, either on the local machine (unix port), or the bare metal hardware (e.g. the pyboard) as a script. . Note that adding the magic commands makes the python code a wee bit ugly: when running (micro)python with a script file, we won&#39;t have so much output as in the interactive console. In fact, except for tracebacks and the results of explicit print statements, we won&#39;t see anything at all. For this reason, we will have to call print, whenever we would like to import the results into the notebook. But what the heck! I can definitely put up with that much. . from IPython.core.magic import Magics, magics_class, line_cell_magic from IPython.core.magic import cell_magic, register_cell_magic, register_line_magic import subprocess import os . @register_cell_magic def micropython(line, cell): with open(&#39;/snap/bin/micropython.py&#39;, &#39;w&#39;) as fout: fout.write(cell) proc = subprocess.Popen([&quot;./micropython&quot;, &quot;/snap/bin/micropython.py&quot;], stdout=subprocess.PIPE, stderr=subprocess.PIPE) print(proc.stdout.read().decode(&quot;utf-8&quot;)) print(proc.stderr.read().decode(&quot;utf-8&quot;)) return None . The following function does nothing outside the notebook: it simply registers a new mode for syntax highlighting, and switches to C, whenever the cell begins with the string %%ccode, or %%makefile. . from IPython.core.display import display_javascript . And finally, at long last, here are the two magic commands. %makefile is simple: each micropython.mk makefile is the same, with the exception of the file name that it is supposed to compile. So, we can take a very generic string, and insert the target. In order to have some trace in the notebook, we also insert the content of the so-generated file into the input field of the cell. . %%ccode reads the contents of the input field of the cell, adds a small header, and writes everything into a file. . @magics_class class MyMagics(Magics): @line_cell_magic def makefile(self, line, cell=None): raw_cell = &quot;USERMODULES_DIR := $(USERMOD_DIR) n n# Add all C files to SRC_USERMOD&quot; for _line in cell.split(): raw_cell += &quot; nSRC_USERMOD += $(USERMODULES_DIR)/&quot; + _line raw_cell += &quot; n nCFLAGS_USERMOD += -I$(USERMODULES_DIR)&quot; with open(&#39;../../../usermod/snippets&#39;+line.replace(line.split(&#39;/&#39;)[-1], &#39;micropython.mk&#39;), &#39;w&#39;) as mout: mout.write(raw_cell) self.shell.set_next_input(&#39;%%makefile {} n n{}&#39;.format(line, raw_cell), replace=True) return None @cell_magic def ccode(self, line, cell): copyright = &quot;&quot;&quot;/* * This file is part of the micropython-usermod project, * * https://github.com/v923z/micropython-usermod * * The MIT License (MIT) * * Copyright (c) 2019-2020 Zoltán Vörös */ &quot;&quot;&quot; if line: with open(&#39;../../../usermod/snippets&#39;+line, &#39;w&#39;) as cout: cout.write(copyright) cout.write(cell) print(&#39;written %d bytes to %s&#39;%(len(copyright) + len(cell), line)) return None ip = get_ipython() ip.register_magics(MyMagics) . %%micropython import os . PermissionError Traceback (most recent call last) &lt;ipython-input-25-72847eee1f2a&gt; in &lt;module&gt; -&gt; 1 get_ipython().run_cell_magic(&#39;micropython&#39;, &#39;&#39;, &#39;import os n&#39;) ~/miniconda3/lib/python3.8/site-packages/IPython/core/interactiveshell.py in run_cell_magic(self, magic_name, line, cell) 2397 with self.builtin_trap: 2398 args = (magic_arg_s, cell) -&gt; 2399 result = fn(*args, **kwargs) 2400 return result 2401 &lt;ipython-input-22-2ccece1fd339&gt; in micropython(line, cell) 1 @register_cell_magic 2 def micropython(line, cell): -&gt; 3 with open(&#39;/snap/bin/micropython.py&#39;, &#39;w&#39;) as fout: 4 fout.write(cell) 5 proc = subprocess.Popen([&#34;./micropython&#34;, &#34;/snap/bin/micropython.py&#34;], PermissionError: [Errno 13] Permission denied: &#39;/snap/bin/micropython.py&#39; .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/2021/05/10/Untitled.html",
+            "relUrl": "/2021/05/10/Untitled.html",
+            "date": " • May 10, 2021"
+        }
+        
+    
+  
+    
+        ,"post1": {
+            "title": "Test",
+            "content": "hello is it me your looking for……… . I cant seem to find you .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/2021/04/27/test.html",
+            "relUrl": "/2021/04/27/test.html",
+            "date": " • Apr 27, 2021"
+        }
+        
+    
+  
+    
+        ,"post2": {
+            "title": "How to Move around in Vim - Advanced",
+            "content": "VIM FOR THE AGES .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/vim/2021/03/30/advanced-vim-movements.html",
+            "relUrl": "/vim/2021/03/30/advanced-vim-movements.html",
+            "date": " • Mar 30, 2021"
+        }
+        
+    
+  
+    
+        ,"post3": {
+            "title": "Setting Up A Homelab",
+            "content": "Setting up pihole setting up heimdall setting up codeserver setting up openssh-server . QUACD Wireguard .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/2021/03/29/Setting-up-a-homelab.html",
+            "relUrl": "/2021/03/29/Setting-up-a-homelab.html",
+            "date": " • Mar 29, 2021"
+        }
+        
+    
+  
+    
+        ,"post4": {
+            "title": "Ruminations On Host And Docker Builders",
+            "content": "One thing i want to get working is a fully automated system setup and configuration for the Jetson boards. Each time i break or get a new Jetson i dont like having to reinstall all packages. To this end i am designing to toolsets. The first is an ansible playbook for linux installation. (Basicallt installing all the required software.) The second one is a modular docker container which uses docker mods to add functionality. . https://docs.linuxserver.io/general/understanding-puid-and-pgid .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/2021/03/26/Ruminations-on-host-and-docker-builders.html",
+            "relUrl": "/2021/03/26/Ruminations-on-host-and-docker-builders.html",
+            "date": " • Mar 26, 2021"
+        }
+        
+    
+  
+    
+        ,"post5": {
+            "title": "How to get started with git",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/git/2021/03/21/Simple-Git.html",
+            "relUrl": "/git/2021/03/21/Simple-Git.html",
+            "date": " • Mar 21, 2021"
+        }
+        
+    
+  
+    
+        ,"post6": {
+            "title": "Setting Up And Configuring Lynx",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/2021/03/21/Setting-up-and-configuring-lynx.html",
+            "relUrl": "/2021/03/21/Setting-up-and-configuring-lynx.html",
+            "date": " • Mar 21, 2021"
+        }
+        
+    
+  
+    
+        ,"post7": {
+            "title": "Using nbdev with micropython",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/nbdev/micropython/2021/03/20/Using-nbdev-with-micropython.html",
+            "relUrl": "/nbdev/micropython/2021/03/20/Using-nbdev-with-micropython.html",
+            "date": " • Mar 20, 2021"
+        }
+        
+    
+  
+    
+        ,"post8": {
+            "title": "Working with nbdev for project development",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/nbdev/2021/03/19/fastai-nb-dev.html",
+            "relUrl": "/nbdev/2021/03/19/fastai-nb-dev.html",
+            "date": " • Mar 19, 2021"
+        }
+        
+    
+  
+    
+        ,"post9": {
+            "title": "Working with Python Decorators",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/python/decorators/2021/03/19/Python-Decorators.html",
+            "relUrl": "/python/decorators/2021/03/19/Python-Decorators.html",
+            "date": " • Mar 19, 2021"
+        }
+        
+    
+  
+    
+        ,"post10": {
+            "title": "Working With Python classes - A short example",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/python/classes/2021/03/19/Python-Classes.html",
+            "relUrl": "/python/classes/2021/03/19/Python-Classes.html",
+            "date": " • Mar 19, 2021"
+        }
+        
+    
+  
+    
+        ,"post11": {
+            "title": "Quickly Build your new system with shell scripts",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/linux/2021/03/18/Making-Install-Scripts-for-repeatability.html",
+            "relUrl": "/linux/2021/03/18/Making-Install-Scripts-for-repeatability.html",
+            "date": " • Mar 18, 2021"
+        }
+        
+    
+  
+    
+        ,"post12": {
+            "title": "Setting up Bash Aliases",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/bash/2021/03/15/Configuring-your-bash-aliases.html",
+            "relUrl": "/bash/2021/03/15/Configuring-your-bash-aliases.html",
+            "date": " • Mar 15, 2021"
+        }
+        
+    
+  
+    
+        ,"post13": {
+            "title": "How to Move around in Vim",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/vim/2021/03/13/simple-vim-movements.html",
+            "relUrl": "/vim/2021/03/13/simple-vim-movements.html",
+            "date": " • Mar 13, 2021"
+        }
+        
+    
+  
+    
+        ,"post14": {
+            "title": "Adding Personalisation To Docker",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/2021/03/13/adding-personalisation-to-docker.html",
+            "relUrl": "/2021/03/13/adding-personalisation-to-docker.html",
+            "date": " • Mar 13, 2021"
+        }
+        
+    
+  
+    
+        ,"post15": {
+            "title": "Vim Configuration",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/vim/2021/03/12/vim-configurations.html",
+            "relUrl": "/vim/2021/03/12/vim-configurations.html",
+            "date": " • Mar 12, 2021"
+        }
+        
+    
+  
+    
+        ,"post16": {
+            "title": "Configuring_linux",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/2021/03/12/Configuring_linux.html",
+            "relUrl": "/2021/03/12/Configuring_linux.html",
+            "date": " • Mar 12, 2021"
+        }
+        
+    
+  
+    
+        ,"post17": {
+            "title": "Fun with Linux - Part 2",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/linux/2021/03/11/Fun-with-Linux-Part-2.html",
+            "relUrl": "/linux/2021/03/11/Fun-with-Linux-Part-2.html",
+            "date": " • Mar 11, 2021"
+        }
+        
+    
+  
+    
+        ,"post18": {
+            "title": "Fun with Linux - Part 1",
+            "content": "DMENU as more than just a simple search program . DT from distrotube. Showed some really cool things you can do with dmenu. .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/linux/2021/03/10/Fun-with-Linux-Part-1.html",
+            "relUrl": "/linux/2021/03/10/Fun-with-Linux-Part-1.html",
+            "date": " • Mar 10, 2021"
+        }
+        
+    
+  
+    
+        ,"post19": {
+            "title": "Trying to get the Teensy Working with Micropython",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/teensy/micropython/microcontrollers/2021/03/10/Configuring-Teensy-for-Micropython.html",
+            "relUrl": "/teensy/micropython/microcontrollers/2021/03/10/Configuring-Teensy-for-Micropython.html",
+            "date": " • Mar 10, 2021"
+        }
+        
+    
+  
+    
+        ,"post20": {
+            "title": "Trying to get the Teensy Working with Circuitpython",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/circuitpython/teensy/microcontrollers/2021/03/10/Configuring-Teensy-for-CircuitPython.html",
+            "relUrl": "/circuitpython/teensy/microcontrollers/2021/03/10/Configuring-Teensy-for-CircuitPython.html",
+            "date": " • Mar 10, 2021"
+        }
+        
+    
+  
+    
+        ,"post21": {
+            "title": "Getting Started in Docker",
+            "content": "Getting Started with Docker . Introduction . Docker is an excellent tool for working with multiple development environments. Often the need arises that you wish to build a new package in python or another language and realise the dependencies are all wrong. Not to mention you need to install underlying system packages to get this up and running. Docker fills this space by providing seperated containers to silo your applications. Docker can be viewed as a virtual machine if you wish to visualise it in some way. Docker sits on top of an underlying system and utilises the systems resources. Much like a Virtual machine. The big advantage of Docker over a virtual machine is that it doesn’t require startup because it uses the Kernel (OS instructions) provided by the host machine. This reduces setup and initialisation time for each container as the system is already running. The Docker philosophy is to build containers that run one specific task or service, such as a web server or a database. . Installation . Docker has many powerful features, some of these will be outlined in the tutorial below. To begin with we shall install Docker using your system package manager. As much of the system development i do is on a Jetson board with a host Ubuntu these commands are tailored to the Ubuntu commands but are easily swapped for arch or fedora etc. The command to run for installation is . sudo apt install docker . Once docker is installed we can begin playing with it. The first thing we can do is remove the need for docker to require sudo priviledges to run. This allows us to develop and run the docker containers without having to call sudo at each docker command. This can be revoked at a later date if you need to harden your system. The command is: . sudo usermod +aG docker $USER . First steps . This will add the current user denoted by the $USER indicator to the docker group. Once this is done we can enable this by restarting the terminal. . Now that we have docker setup we can pull down a basic container to test whether the system is working. To do this we will pull down the base ubuntu image. This image is large but can be utilised later as a base for your own containers so the download is not wasted, the command to run is . docker pull ubuntu:latest . The latest statement after the semicolon is to retrieve the latest ubuntu version on docker hub. This dwnload will take a bit to run. Once it is complete we can verify we have the docker image by running: . docker images . This will list all the downloaded docker images. If we wish to remove these images we can run: . DO NOT KNOW THE COMMAND . We can see the Ubuntu image is available and we can start the docker container with: . docker run -it ubuntu:latest . We have two flags here -i and -t which can be combined as they are shown here to increase readability. The i flag indicates interactive and the -t indicates terminal. We can confirm the docker container is running as our prompt will change from the system location to . root@&lt;alphanumeric_string&gt; . We can use many of the commands that would be used in a standard linux system including cd, ls, mkdir. However we can note that the default docker containers are setup with root access and no additional user. We will fix this later in the tutorial. . We can exit out of the docker container with ctrl -d. The major feature of a docker container is that the system is non persistent so whenever the container is exited no state is saved. For instance if you ran apt install wget in your instance then closed the docker container. Newt time you ran the container you would not have this package. We can fix this using a dockerfile. An introduction to dockerfiles will be shown below. Before we get there we can do some more things in prebuilt containers with out an issue. One thing we may want to do is utilise a docker container such as https://hub.docker.com/r/jupyter/datascience-notebook/. This container is a Jupyter notebook stack for running datascience projects. . We can download it with . docker pull jupyter/datascience-notebook . The cool thing about this container is we can port forward (send to the main machine) the jupyter notebook. The host computer is then able to run the jupyter notebook in the browser just like normal. The difference is that you are on a different machine. An issue that occurs with our non persistant docker containers is that we can no longer save files in the container for use at another stage. How do we get around this. In docker we have another flag known as -v or volumes. We setup our run script as shown, using the previously downloaded datascience docker image. To allow access to the notebook on the host machine we also use the -p flag and forward port 10000:5000`` . docker run --rm -p 10000:5000 -e JUPYTER_ENABLE_LAB=yes -v &quot;$PWD&quot;:/home/jovyan/work jupyter/datascience-notebook:9b06df75e445 . The command above points the host folder found in /home/ to the destination or docker container location ~/. Thus allowing us to save any of our python scripts in a persistant and accessible folder for later. Docker also allows us to create volumes external to docker and point to these in the container thus seperating host and client files. . Building your own containers . There comes a time when you want to add certain features to your container that is not inbuilt in the image for example you may want to implement some machine learning and your python container only contains the main python libraries. You don’t want to run pip install torch everytime you want to do anything. To overcome this we can build a dockerfile. This is basically a recipe for building a docker image. Below is an example docker image to implement machine learning using pytorch. . ## Taken from https://github.com/anibali/docker-pytorch ::: Many other images around with similar setups FROM nvidia/cuda:11.0-base-ubuntu20.04 # Install some basic utilities RUN apt-get update &amp;&amp; apt-get install -y curl ca-certificates sudo git bzip2 libx11-6 &amp;&amp; rm -rf /var/lib/apt/lists/* # Create a working directory RUN mkdir /app WORKDIR /app # Create a non-root user and switch to it RUN adduser --disabled-password --gecos &#39;&#39; --shell /bin/bash user &amp;&amp; chown -R user:user /app RUN echo &quot;user ALL=(ALL) NOPASSWD:ALL&quot; &gt; /etc/sudoers.d/90-user USER user # All users can use /home/user as their home directory ENV HOME=/home/user RUN chmod 777 /home/user # Install Miniconda and Python 3.8 ENV CONDA_AUTO_UPDATE_CONDA=false ENV PATH=/home/user/miniconda/bin:$PATH RUN curl -sLo ~/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh &amp;&amp; chmod +x ~/miniconda.sh &amp;&amp; ~/miniconda.sh -b -p ~/miniconda &amp;&amp; rm ~/miniconda.sh &amp;&amp; conda install -y python==3.8.3 &amp;&amp; conda clean -ya # CUDA 11.0-specific steps RUN conda install -y -c pytorch cudatoolkit=11.0.221 &quot;pytorch=1.7.0=py3.8_cuda11.0.221_cudnn8.0.3_0&quot; &quot;torchvision=0.8.1=py38_cu110&quot; &amp;&amp; conda clean -ya # Set the default command to python3 CMD [&quot;python3&quot;] . Much of the code can be read as standard linux commands with an added docker recipe command. We can run through the dockerfile step by step to further flesh out the commands. If you wish to skip over this section jump to ###HYPERLINK TO END###. . The first command is . FROM nvidia/cuda:11.0-base-ubuntu20.04 . This is pointing the docker image to a base image which in itself is a compiled docker image from another source. It is possible to run a bare minimum docker image calling FROM scratch which will have nothing installed and you add everything you need to the image. We often want the functionality of a previously designed base for certain reasons in this case we are pulling from nvidias cuda build saving us the time of installation of CUDA in our own container. . Each docker command creates a layer allowing you to roll back or change setup without having to redownload from the start. . The next steps are to install basic utilities and create and move into a working directory. . #install some basic utilities RUN apt-get update &amp;&amp; apt-get install -y curl ca-certificates sudo git bzip2 libx11-6 &amp;&amp; rm -rf /var/lib/apt/lists/* # Create a working directory RUN mkdir /app WORKDIR /app . The command RUN tells the docker container to run a linux command and WORKDIR sets the current folder. . We then can add and modify users using . # Create a non-root user and switch to it RUN adduser --disabled-password --gecos &#39;&#39; --shell /bin/bash user &amp;&amp; chown -R user:user /app RUN echo &quot;user ALL=(ALL) NOPASSWD:ALL&quot; &gt; /etc/sudoers.d/90-user USER user . We can begin to see that the commands are exactly like you would do in setting up your own install on a machine. The next steps create the home directory, add environment variables and install Miniconda with a python environment. . #All users can use /home/user as their home directory ENV HOME=/home/user RUN chmod 777 /home/user # Install Miniconda and Python 3.8 ENV CONDA_AUTO_UPDATE_CONDA=false ENV PATH=/home/user/miniconda/bin:$PATH RUN curl -sLo ~/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh &amp;&amp; chmod +x ~/miniconda.sh &amp;&amp; ~/miniconda.sh -b -p ~/miniconda &amp;&amp; rm ~/miniconda.sh &amp;&amp; conda install -y python==3.8.3 &amp;&amp; conda clean -ya . We can string commands together with the &amp;&amp; command create a single layer following a set install stage. It is of note that if these become to large if for what ever reason the installation fails it will fall back to the previous known layer. For example if the miniconda installation fails the system will revert to the layer where the environment variables are set. . Finally the dockerfile installs torch and additional utilies before cleaning up with: . # CUDA 11.0-specific steps RUN conda install -y -c pytorch cudatoolkit=11.0.221 &quot;pytorch=1.7.0=py3.8_cuda11.0.221_cudnn8.0.3_0&quot; &quot;torchvision=0.8.1=py38_cu110&quot; &amp;&amp; conda clean -ya . The last command in a dockerfile is usually CMD to execute a program at each docker run command. In this situation we have . CMD [&quot;python3&quot;] . Going further . But wait if we are installing all these packages how did we get access to a jupyter notebook. We can setup a nice jupyter lab environment with the below code. This can be placed as the last block in your dockerfile to start the Jupyter lab. . RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - &amp;&amp; apt-get update &amp;&amp; apt-get install -y nodejs &amp;&amp; rm -rf /var/lib/apt/lists/* &amp;&amp; apt-get clean &amp;&amp; pip3 install jupyter jupyterlab==2.2.9 --verbose &amp;&amp; jupyter labextension install @jupyter-widgets/jupyterlab-manager RUN jupyter lab --generate-config RUN python3 -c &quot;from notebook.auth.security import set_password; set_password(&#39;&#39;, &#39;/root/.jupyter/jupyter_notebook_config.json&#39;)&quot; CMD /bin/bash -c &quot;jupyter lab --ip 0.0.0.0 --port 8888 --allow-root &amp;&gt; /var/log/jupyter.log&quot; &amp; echo &quot;allow 10 sec for JupyterLab to start @ http://$(hostname -I | cut -d&#39; &#39; -f1):8888 (password nvidia)&quot; &amp;&amp; echo &quot;JupterLab logging location: /var/log/jupyter.log (inside the container)&quot; &amp;&amp; /bin/bash . Outside of Software Development . There are many other things we can do with docker containers outside of software development. Below are a couple of examples of things we can do in a docker container. . https://hub.docker.com/r/linuxserver/plex – A plex server | https://hub.docker.com/r/linuxserver/heimdall – Web Application /Docker image server | https://hub.docker.com/r/pihole/pihole – A Network wide ad blocker | https://hub.docker.com/r/linuxserver/lychee – Photo management tool | https://hub.docker.com/r/linuxserver/nextcloud – file storage similar to google drive. | https://hub.docker.com/r/linuxserver/pylon – IDE built with node.js (strictly software development but a web based containerised development environment. | https://hub.docker.com/r/rancher/rancher – Container management platform | https://awesomeopensource.com/project/gcgarner/IOTstack – Full IOT stack | . Getting in and out of containers, and shutting down a docker service . Entering . We often wish to run docker as a service and only access the environment when we need to. We can jump into a currently running docker image with the docker exec command: . docker exec -t CONTAINER bash . CONTAINER is a currently running image. . Exiting . We can exit out of docker containers without terminating them by using the -d flag during initialisation to put the container in a detached mode. . Shutdown . We can shutdown a container using the kill command, gracefully shutting down the service . docker kill --signal=SIGTERM &lt;containerId&gt; . Final Notes . Docker has many potential applications and features and we have barely scratched the surface of its full potential. We can see from this short overview that the container design makes for an excellent development environment with both interactive and non interactive setups. .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/docker/2021/03/09/Getting-Started-with-Docker.html",
+            "relUrl": "/docker/2021/03/09/Getting-Started-with-Docker.html",
+            "date": " • Mar 9, 2021"
+        }
+        
+    
+  
+    
+        ,"post22": {
+            "title": "Docker cross compiling on x86 for ARM",
+            "content": "Configuring Docker for use on Jetsons . Making Docker capable of compiling ARM containers using QEMU . We need to install and configure qemu to run docker containers with our main machines. . sudo apt-get install qemu binfmt-support qemu-user-static # Install the qemu packages . docker run --rm --privileged multiarch/qemu-user-static --reset -p yes # This step will execute the registering scripts . docker run --rm -t arm64v8/ubuntu uname -m # Testing the emulation environment aarch64 # Outputs the correct architecture . Add docker to user group . sudo usermod -aG docker $USER . Configure docker for NVIDIA . distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list . sudo apt-get update &amp;&amp; sudo apt-get install -y nvidia-container-toolkit sudo apt install -y nvidia-docker2 sudo systemctl daemon-reload sudo systemctl restart docker . References . https://www.stereolabs.com/docs/docker/building-arm-container-on-x86/ . https://dev.to/caelinsutch/running-docker-containers-for-the-nvidia-jetson-nano-5a06 .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/docker/jetson/qemu/2021/03/09/Docker-configuration-for-jetson.html",
+            "relUrl": "/docker/jetson/qemu/2021/03/09/Docker-configuration-for-jetson.html",
+            "date": " • Mar 9, 2021"
+        }
+        
+    
+  
+    
+        ,"post23": {
+            "title": "Getting Started with Micropython",
+            "content": "Getting Started with Micropython . Micropython doesn’t have all the libraries pre installed on the system. To work with these libraries we can use thonny or we can look at building from source . Setting up the environment for building. . https://learn.adafruit.com/micropython-for-samd21/overview . Installed Vagrant by downloading from their website and moving the vagrant file to /usr/bin Had to install virtualbox for this to run as well .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/jupyter/microcontrollers/micropython/circuitpython/2021/03/08/Getting-started-with-micropython.html",
+            "relUrl": "/jupyter/microcontrollers/micropython/circuitpython/2021/03/08/Getting-started-with-micropython.html",
+            "date": " • Mar 8, 2021"
+        }
+        
+    
+  
+    
+        ,"post24": {
+            "title": "Micropython in Jupyter Notebooks",
+            "content": "Building a Development environment in jupyter for microcontrollers. . The goal of this development was to build a pipeline to implement nbdev based code development with circuitpython. The initial issue that i faced was that the circuitpython jupyter kernel captured every message sent to jupyter and forwarded this over serial to the mcu. I had to capture this data before it was sent to be able to use it in python. I didn’t want to effect the overall functionality of the circuitptyhon kernel so i chose to replicate the %python and %%python magics with one key difference. These magics did not create a subprocess by calling a command line based python. These parsed the python code to eval and exec commands. Below is the code written to implement the line magic %python. Currently the system has two flaws that need to be fixed the first of these is that the output of the commands implemented into the jupyter notebook do not display to the system. The second thing of note is that the system does not include a global scope for this information and as such the information isn’t passed between cells. Further work aims to undertake this and help to catch some of the other errors that occur when running the code. . def is_magic(self, line): &quot;&quot;&quot;Returns true if line was handled&quot;&quot;&quot; if line.startswith(&quot;%softreset&quot;): self.board.softreset() elif line.startswith(&quot;%upload_delay&quot;): try: s_line = line.split(&#39; &#39;) self.upload_delay = float(s_line[1]) KERNEL_LOGGER.debug(f&quot;upload_delay set to {float(s_line[1])} s&quot;) except TypeError: pass elif line.startswith(&quot;%python&quot;): #python line magic, runs what ever is on the line following the %python magic. code = line.lstrip(&quot;%python&quot;) code = code.lstrip(&#39; &#39;) for item in code.split(&quot;;&quot;): item = item.lstrip(&#39; &#39;) #remove leading white space try: print(eval(item)) #does not print except: out = exec(item) if out != None: print(out) #does not print else: return False return True . The cell magics code is shown below. If you wish to play with this library feel free to install my fork of the adafruit circuitpython jupyter kernel from this link (https://github.com/qwertimer/circuitpython_jupyter_kernel) or if my pull request is accepted the latest versions of the adafruit library. . def is_cell_magic(self, code): &quot;&quot;&quot;Cell magic to run python code. -- Cell shall begin with %%python followed by a new line Will iteratively run each line of code. &quot;&quot;&quot; if code.startswith(&quot;%%python&quot;): code = code.lstrip(&quot;%%python&quot;) code = code.lstrip(&#39; &#39;) data = code.splitlines(True) for item in data: code = code.lstrip(&#39; &#39;) #this removes all preceeding white space, #i need to figure out how to get for loops, etc working try: print(eval(item)) #does not print except: out = exec(item) if out != None: print(out) #does not print return True else: return False . Finally, this is a work in progress and further magics may be implemented to run makefiles and other CI based tests in the jupyter notebook. One day this system will be a fully fledged repl and development environment for circuitpython. .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/jupyter/microcontrollers/micropython/circuitpython/2021/03/08/Creating-a-jupyter-dev-pipeline-for-microcontrollers.html",
+            "relUrl": "/jupyter/microcontrollers/micropython/circuitpython/2021/03/08/Creating-a-jupyter-dev-pipeline-for-microcontrollers.html",
+            "date": " • Mar 8, 2021"
+        }
+        
+    
+  
+    
+        ,"post25": {
+            "title": "Using nbdev to automate CircuitPython development",
+            "content": "Circuit python is a powerful programming environment for developing on microcontrollers. When we integrate the Jupyter notebook into the development cycle we can begin to create useble code blocks that we can test on the fly. One disadvantage to this is that these REPL based notebooks can&#39;t be flashed or deployed to the microcontroller. One way we can overcome this is utilise nbdev from fastai --https://github.com/fastai/nbdev. nbdev has a very useful tool which exports the current cell to a python file. To Implement this a few keywords are utilised in the notebooks. The biggest one of these is #export This exports the current code cell to the python file indicated by the header information. This is labelled with #default_exp and the module name for example #default_exp core .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/2021/02/27/nbdev-and-circuit-python.html",
+            "relUrl": "/2021/02/27/nbdev-and-circuit-python.html",
+            "date": " • Feb 27, 2021"
+        }
+        
+    
+  
+    
+        ,"post26": {
+            "title": "SSH configuration",
+            "content": "To setup a ssh link with a system a few configurations need to be undertaken. The first is to make sure you have a ssh key generated. This can be done with. . ssh-keygen -t ed25519 . if you would like you can add alias ssh-keygen=&quot;ssh-keygen -t ed25519&quot; to always have ed25519 as your default. Once the ssh key is generated log onto the remote system and run . ifconfig . This will give you the ip address. Log in from the host machine using . ssh &lt;username&gt;@&lt;ip-address&gt; . If this is working we can then log back out by hitting . ctrl - D . This will kill the link or sigkill in technical terms. Once we are back on our host system we need to send the ssh-key to the remote system to do this we send . ssh-copy-id -i ~/.ssh/mykey &lt;username&gt;@&lt;ip-address&gt; . this should send the ssh key to the remote. To confirm this we use. . ssh -i ~/.ssh/mykey &lt;username&gt;@&lt;ip-address&gt; . Once confirmed lets log into the remote and change some default settings in the ssh config. SSH back into the system with . ssh &lt;username&gt;@&lt;ip-address&gt; . Once logged in navigate to the sshd_config file with . sudo vim /etc/ssh/sshd_config . type your sudo password and open up the editor. If you don&#39;t wish to use vim you can change the command to . sudo nano /etc/ssh/sshd_config . Once in the editor navigate to Port and change the Port from the default 22 to something else eg. . Port 1034 . Remember this port number as you will need it to log in later. Next remove PermitRootLogin to reduce security risks over ssh with . PermitRootLogin no . next change PubKeyAuthentication to yes . PubkeyAuthentication yes . We can now disable password authentication as we are using a key pair. . PasswordAuthentication no . If we want to forward a jupyter notebook through an ssh tunnel we can change TCP forwarding to yes . AllowTcpForwarding yes . We can now save and close this file. Once the file is closed we need to restart the systemctl service of the ssh deamon. This is done with . sudo systemctl restart sshd.service . This may close your ssh link. Once it is restarted try to remote back into the system with: . ssh -p 1034 &lt;username&gt;@&lt;ip-address&gt; . The -p is for port which we set up before. If this works you should have a terminal up and running for the remote machine. .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/2021/02/27/SSH-and-security.html",
+            "relUrl": "/2021/02/27/SSH-and-security.html",
+            "date": " • Feb 27, 2021"
+        }
+        
+    
+  
+    
+        ,"post27": {
+            "title": "Circuit Python in Jupyter Notebooks",
+            "content": "One issue that is faced in programming microcontrollers is the inability to quickly test code and see results. Python has the ability to run what is known as a REPL (Read, Evaluate, Print, Loop). REPLs provide an interactive way to program and debug code. Circuit python and micropython have introduced a new group of programmers to the embedded world. Now anyone can program a microcontroller using a simple high level language such as python (with some exceptions). However often times a new programmer wont understand how to interact with a microcontroller from the command line and will just flash code to the controller and hope to see results. We can overcome this by using screen in a terminal and point to the microcontroller. However this is messy and harder to follow when testing large code chunks. To overcome this Adafruit have released a circuitpython kernel for the Jupyter environment allowing users to program the microcontrollers in an interactive environment such as Jupyter. Below is the outline of how to do this. . Getting Started . Install Jupyter notebooks if it hasn&#39;t been done already . python3 -m pip install jupyter . We can then test this install by running jupyter notebook in the terminal with: . jupyter notebook . As you can see the jupyter notebook opens in the current directory and it is of note that you can&#39;t go up a directory level. It is Worthwhile then to make sure you open jupyter notebook at the top level of your project. . Installing the Circuit Python Kernel . We can install the programming language support through the kernel installations. This is done with a wrapper allowing the Circuitpython REPL to interact with the Jupyter code cells. To install the Kernel clone the kernel with: . git clone https://github.com/adafruit/circuitpython_kernel.git . We then open to the folder and run the install . cd circuitpython_kernel/ . python3 setup.py install python3 -m circuitpython_kernel.install . Now we can verify by running jupyter kernelspec list . Creating Notebooks . To create a notebook we can go New -&gt; Notebook -&gt; CircuitPython. From here we can start running circuitpython code for testing .",
+            "url": "https://qwertimer.github.io/qwertimers_blog/circuit%20python/jupyter/2021/02/27/Installing-circuit-python-into-jupyter-notebook.html",
+            "relUrl": "/circuit%20python/jupyter/2021/02/27/Installing-circuit-python-into-jupyter-notebook.html",
+            "date": " • Feb 27, 2021"
+        }
+        
+    
+  
+    
+        ,"post28": {
+            "title": "Github Actions From Fastai",
+            "content": "",
+            "url": "https://qwertimer.github.io/qwertimers_blog/2021/02/25/github-actions-from-fastai.html",
+            "relUrl": "/2021/02/25/github-actions-from-fastai.html",
+            "date": " • Feb 25, 2021"
+        }
+        
+    
+  
+    
+        ,"post29": {
             "title": "Fastpages Notebook Blog Post",
             "content": "About . This notebook is a demonstration of some of capabilities of fastpages with notebooks. . With fastpages you can save your jupyter notebooks into the _notebooks folder at the root of your repository, and they will be automatically be converted to Jekyll compliant blog posts! . Front Matter . The first cell in your Jupyter Notebook or markdown blog post contains front matter. Front matter is metadata that can turn on/off options in your Notebook. It is formatted like this: . # &quot;My Title&quot; &gt; &quot;Awesome summary&quot; - toc:true- branch: master - badges: true - comments: true - author: Hamel Husain &amp; Jeremy Howard - categories: [fastpages, jupyter] . Setting toc: true will automatically generate a table of contents | Setting badges: true will automatically include GitHub and Google Colab links to your notebook. | Setting comments: true will enable commenting on your blog post, powered by utterances. | . The title and description need to be enclosed in double quotes only if they include special characters such as a colon. More details and options for front matter can be viewed on the front matter section of the README. . Markdown Shortcuts . A #hide comment at the top of any code cell will hide both the input and output of that cell in your blog post. . A #hide_input comment at the top of any code cell will only hide the input of that cell. . The comment #hide_input was used to hide the code that produced this. . put a #collapse-hide flag at the top of any cell if you want to hide that cell by default, but give the reader the option to show it: . import pandas as pd import altair as alt . . put a #collapse-show flag at the top of any cell if you want to show that cell by default, but give the reader the option to hide it: . cars = &#39;https://vega.github.io/vega-datasets/data/cars.json&#39; movies = &#39;https://vega.github.io/vega-datasets/data/movies.json&#39; sp500 = &#39;https://vega.github.io/vega-datasets/data/sp500.csv&#39; stocks = &#39;https://vega.github.io/vega-datasets/data/stocks.csv&#39; flights = &#39;https://vega.github.io/vega-datasets/data/flights-5k.json&#39; . . place a #collapse-output flag at the top of any cell if you want to put the output under a collapsable element that is closed by default, but give the reader the option to open it: . print(&#39;The comment #collapse-output was used to collapse the output of this cell by default but you can expand it.&#39;) . The comment #collapse-output was used to collapse the output of this cell by default but you can expand it. . . Interactive Charts With Altair . Charts made with Altair remain interactive. Example charts taken from this repo, specifically this notebook. . Example 1: DropDown . # use specific hard-wired values as the initial selected values selection = alt.selection_single( name=&#39;Select&#39;, fields=[&#39;Major_Genre&#39;, &#39;MPAA_Rating&#39;], init={&#39;Major_Genre&#39;: &#39;Drama&#39;, &#39;MPAA_Rating&#39;: &#39;R&#39;}, bind={&#39;Major_Genre&#39;: alt.binding_select(options=genres), &#39;MPAA_Rating&#39;: alt.binding_radio(options=mpaa)} ) # scatter plot, modify opacity based on selection alt.Chart(df).mark_circle().add_selection( selection ).encode( x=&#39;Rotten_Tomatoes_Rating:Q&#39;, y=&#39;IMDB_Rating:Q&#39;, tooltip=&#39;Title:N&#39;, opacity=alt.condition(selection, alt.value(0.75), alt.value(0.05)) ) . Example 2: Tooltips . alt.Chart(df).mark_circle().add_selection( alt.selection_interval(bind=&#39;scales&#39;, encodings=[&#39;x&#39;]) ).encode( alt.X(&#39;Rotten_Tomatoes_Rating&#39;, type=&#39;quantitative&#39;), alt.Y(&#39;IMDB_Rating&#39;, type=&#39;quantitative&#39;, axis=alt.Axis(minExtent=30)), # y=alt.Y(&#39;IMDB_Rating:Q&#39;, ), # use min extent to stabilize axis title placement tooltip=[&#39;Title:N&#39;, &#39;Release_Date:N&#39;, &#39;IMDB_Rating:Q&#39;, &#39;Rotten_Tomatoes_Rating:Q&#39;] ).properties( width=500, height=400 ) . Example 3: More Tooltips . label = alt.selection_single( encodings=[&#39;x&#39;], # limit selection to x-axis value on=&#39;mouseover&#39;, # select on mouseover events nearest=True, # select data point nearest the cursor empty=&#39;none&#39; # empty selection includes no data points ) # define our base line chart of stock prices base = alt.Chart().mark_line().encode( alt.X(&#39;date:T&#39;), alt.Y(&#39;price:Q&#39;, scale=alt.Scale(type=&#39;log&#39;)), alt.Color(&#39;symbol:N&#39;) ) alt.layer( base, # base line chart # add a rule mark to serve as a guide line alt.Chart().mark_rule(color=&#39;#aaa&#39;).encode( x=&#39;date:T&#39; ).transform_filter(label), # add circle marks for selected time points, hide unselected points base.mark_circle().encode( opacity=alt.condition(label, alt.value(1), alt.value(0)) ).add_selection(label), # add white stroked text to provide a legible background for labels base.mark_text(align=&#39;left&#39;, dx=5, dy=-5, stroke=&#39;white&#39;, strokeWidth=2).encode( text=&#39;price:Q&#39; ).transform_filter(label), # add text labels for stock prices base.mark_text(align=&#39;left&#39;, dx=5, dy=-5).encode( text=&#39;price:Q&#39; ).transform_filter(label), data=stocks ).properties( width=500, height=400 ) . Data Tables . You can display tables per the usual way in your blog: . df[[&#39;Title&#39;, &#39;Worldwide_Gross&#39;, &#39;Production_Budget&#39;, &#39;Distributor&#39;, &#39;MPAA_Rating&#39;, &#39;IMDB_Rating&#39;, &#39;Rotten_Tomatoes_Rating&#39;]].head() . Title Worldwide_Gross Production_Budget Distributor MPAA_Rating IMDB_Rating Rotten_Tomatoes_Rating . 0 The Land Girls | 146083.0 | 8000000.0 | Gramercy | R | 6.1 | NaN | . 1 First Love, Last Rites | 10876.0 | 300000.0 | Strand | R | 6.9 | NaN | . 2 I Married a Strange Person | 203134.0 | 250000.0 | Lionsgate | None | 6.8 | NaN | . 3 Let&#39;s Talk About Sex | 373615.0 | 300000.0 | Fine Line | None | NaN | 13.0 | . 4 Slam | 1087521.0 | 1000000.0 | Trimark | R | 3.4 | 62.0 | . Images . Local Images . You can reference local images and they will be copied and rendered on your blog automatically. You can include these with the following markdown syntax: . ![](my_icons/fastai_logo.png) . . Remote Images . Remote images can be included with the following markdown syntax: . ![](https://image.flaticon.com/icons/svg/36/36686.svg) . . Animated Gifs . Animated Gifs work, too! . ![](https://upload.wikimedia.org/wikipedia/commons/7/71/ChessPawnSpecialMoves.gif) . . Captions . You can include captions with markdown images like this: . ![](https://www.fast.ai/images/fastai_paper/show_batch.png &quot;Credit: https://www.fast.ai/2020/02/13/fastai-A-Layered-API-for-Deep-Learning/&quot;) . . Other Elements . GitHub Flavored Emojis . Typing I give this post two :+1:! will render this: . I give this post two :+1:! . Tweetcards . Typing &gt; twitter: https://twitter.com/jakevdp/status/1204765621767901185?s=20 will render this: Altair 4.0 is released! https://t.co/PCyrIOTcvvTry it with: pip install -U altairThe full list of changes is at https://t.co/roXmzcsT58 ...read on for some highlights. pic.twitter.com/vWJ0ZveKbZ . &mdash; Jake VanderPlas (@jakevdp) December 11, 2019 . Youtube Videos . Typing &gt; youtube: https://youtu.be/XfoYk_Z5AkI will render this: . Boxes / Callouts . Typing &gt; Warning: There will be no second warning! will render this: . Warning: There will be no second warning! . Typing &gt; Important: Pay attention! It&#39;s important. will render this: . Important: Pay attention! It&#8217;s important. . Typing &gt; Tip: This is my tip. will render this: . Tip: This is my tip. . Typing &gt; Note: Take note of this. will render this: . Note: Take note of this. . Typing &gt; Note: A doc link to [an example website: fast.ai](https://www.fast.ai/) should also work fine. will render in the docs: . Note: A doc link to an example website: fast.ai should also work fine. . Footnotes . You can have footnotes in notebooks, however the syntax is different compared to markdown documents. This guide provides more detail about this syntax, which looks like this: . For example, here is a footnote {% fn 1 %}. And another {% fn 2 %} {{ &#39;This is the footnote.&#39; | fndetail: 1 }} {{ &#39;This is the other footnote. You can even have a [link](www.github.com)!&#39; | fndetail: 2 }} . For example, here is a footnote 1. . And another 2 . 1. This is the footnote.↩ . 2. This is the other footnote. You can even have a link!↩ .",
             "url": "https://qwertimer.github.io/qwertimers_blog/jupyter/2020/02/20/test.html",
@@ -12,9 +331,9 @@
     
   
     
-        ,"post1": {
+        ,"post30": {
             "title": "An Example Markdown Post",
-            "content": "Example Markdown Post . Basic setup . Jekyll requires blog post files to be named according to the following format: . YEAR-MONTH-DAY-filename.md . Where YEAR is a four-digit number, MONTH and DAY are both two-digit numbers, and filename is whatever file name you choose, to remind yourself what this post is about. .md is the file extension for markdown files. . The first line of the file should start with a single hash character, then a space, then your title. This is how you create a “level 1 heading” in markdown. Then you can create level 2, 3, etc headings as you wish but repeating the hash character, such as you see in the line ## File names above. . Basic formatting . You can use italics, bold, code font text, and create links. Here’s a footnote 1. Here’s a horizontal rule: . . Lists . Here’s a list: . item 1 | item 2 | . And a numbered list: . item 1 | item 2 | Boxes and stuff . This is a quotation . . You can include alert boxes …and… . . You can include info boxes Images . . Code . You can format text and code per usual . General preformatted text: . # Do a thing do_thing() . Python code and output: . # Prints &#39;2&#39; print(1+1) . 2 . Formatting text as shell commands: . echo &quot;hello world&quot; ./some_script.sh --option &quot;value&quot; wget https://example.com/cat_photo1.png . Formatting text as YAML: . key: value - another_key: &quot;another value&quot; . Tables . Column 1 Column 2 . A thing | Another thing | . Tweetcards . Altair 4.0 is released! https://t.co/PCyrIOTcvvTry it with: pip install -U altairThe full list of changes is at https://t.co/roXmzcsT58 ...read on for some highlights. pic.twitter.com/vWJ0ZveKbZ . &mdash; Jake VanderPlas (@jakevdp) December 11, 2019 Footnotes . This is the footnote. &#8617; . |",
+            "content": "Example Markdown Post . Basic setup . Jekyll requires blog post files to be named according to the following format: . YEAR-MONTH-DAY-filename.md . Where YEAR is a four-digit number, MONTH and DAY are both two-digit numbers, and filename is whatever file name you choose, to remind yourself what this post is about. .md is the file extension for markdown files. . The first line of the file should start with a single hash character, then a space, then your title. This is how you create a “level 1 heading” in markdown. Then you can create level 2, 3, etc headings as you wish but repeating the hash character, such as you see in the line ## File names above. . Basic formatting . You can use italics, bold, code font text, and create links. Here’s a footnote 1. Here’s a horizontal rule: . . Lists . Here’s a list: . item 1 | item 2 | . And a numbered list: . item 1 | item 2 | Boxes and stuff . This is a quotation . . You can include alert boxes …and… . . You can include info boxes Images . . Code . You can format text and code per usual . General preformatted text: . # Do a thing do_thing() . Python code and output: . # Prints &#39;2&#39; print(1+1) . 2 . Formatting text as shell commands: . echo &quot;hello world&quot; ./some_script.sh --option &quot;value&quot; wget https://example.com/cat_photo1.png . Formatting text as YAML: . key: value - another_key: &quot;another value&quot; . Tables . Column 1 Column 2 . A thing | Another thing | . Tweetcards . Footnotes . This is the footnote. &#8617; . |",
             "url": "https://qwertimer.github.io/qwertimers_blog/markdown/2020/01/14/test-markdown-post.html",
             "relUrl": "/markdown/2020/01/14/test-markdown-post.html",
             "date": " • Jan 14, 2020"
@@ -56,10 +375,14 @@
   
 
   
+
   
 
   
-      ,"page10": {
+  
+
+  
+      ,"page12": {
           "title": "",
           "content": "Sitemap: {{ “sitemap.xml” | absolute_url }} | .",
           "url": "https://qwertimer.github.io/qwertimers_blog/robots.txt",

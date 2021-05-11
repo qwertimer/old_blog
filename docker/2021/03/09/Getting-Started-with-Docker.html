@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Getting Started in Docker | fastpages</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Getting Started in Docker" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Docker basics" />
+<meta property="og:description" content="Docker basics" />
+<link rel="canonical" href="https://qwertimer.github.io/qwertimers_blog/docker/2021/03/09/Getting-Started-with-Docker.html" />
+<meta property="og:url" content="https://qwertimer.github.io/qwertimers_blog/docker/2021/03/09/Getting-Started-with-Docker.html" />
+<meta property="og:site_name" content="fastpages" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-03-09T00:00:00-06:00" />
+<script type="application/ld+json">
+{"url":"https://qwertimer.github.io/qwertimers_blog/docker/2021/03/09/Getting-Started-with-Docker.html","@type":"BlogPosting","headline":"Getting Started in Docker","dateModified":"2021-03-09T00:00:00-06:00","datePublished":"2021-03-09T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://qwertimer.github.io/qwertimers_blog/docker/2021/03/09/Getting-Started-with-Docker.html"},"description":"Docker basics","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/qwertimers_blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://qwertimer.github.io/qwertimers_blog/feed.xml" title="fastpages" /><link rel="shortcut icon" type="image/x-icon" href="/qwertimers_blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/qwertimers_blog/">fastpages</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/qwertimers_blog/about/">About Me</a><a class="page-link" href="/qwertimers_blog/search/">Search</a><a class="page-link" href="/qwertimers_blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Getting Started in Docker</h1><p class="page-description">Docker basics</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-03-09T00:00:00-06:00" itemprop="datePublished">
+        Mar 9, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      11 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/qwertimers_blog/categories/#Docker">Docker</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#getting-started-with-docker">Getting Started with Docker</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#introduction">Introduction</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#installation">Installation</a></li>
+<li class="toc-entry toc-h1"><a href="#first-steps">First steps</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#building-your-own-containers">Building your own containers</a></li>
+<li class="toc-entry toc-h2"><a href="#going-further">Going further</a></li>
+<li class="toc-entry toc-h2"><a href="#outside-of-software-development">Outside of Software Development</a></li>
+<li class="toc-entry toc-h2"><a href="#getting-in-and-out-of-containers-and-shutting-down-a-docker-service">Getting in and out of containers, and shutting down a docker service</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#entering">Entering</a></li>
+<li class="toc-entry toc-h3"><a href="#exiting">Exiting</a></li>
+<li class="toc-entry toc-h3"><a href="#shutdown">Shutdown</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#final-notes">Final Notes</a></li>
+</ul>
+</li>
+</ul><h1 id="getting-started-with-docker">
+<a class="anchor" href="#getting-started-with-docker" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started with Docker</h1>
+
+<h2 id="introduction">
+<a class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>Docker is an excellent tool for working with multiple development environments. Often the need arises that you wish to build a new package in python or another language and realise the dependencies are all wrong. Not to mention you need to install underlying system packages to get this up and running. Docker fills this space by providing seperated containers to silo your applications. Docker can be viewed as a virtual machine if you wish to visualise it in some way. Docker sits on top of an underlying system and utilises the systems resources. Much like a Virtual machine. The big advantage of Docker over a virtual machine is that it doesn’t require startup because it uses the Kernel (OS instructions) provided by the host machine. This reduces setup and initialisation time for each container as the system is already running. The Docker philosophy is to build containers that run one specific task or service, such as a web server or a database.</p>
+
+<h1 id="installation">
+<a class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
+<p>Docker has many powerful features, some of these will be outlined in the tutorial below. To begin with we shall install Docker using your system package manager. As much of the system development i do is on a Jetson board with a host Ubuntu these commands are tailored to the Ubuntu commands but are easily swapped for arch or fedora etc. The command to run for installation is</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install docker
+</code></pre></div></div>
+
+<p>Once docker is installed we can begin playing with it. The first thing we can do is remove the need for docker to require sudo priviledges to run. This allows us to develop and run the docker containers without having to call sudo at each docker command. This can be revoked at a later date if you need to harden your system. The command is:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo usermod +aG docker $USER
+</code></pre></div></div>
+
+<h1 id="first-steps">
+<a class="anchor" href="#first-steps" aria-hidden="true"><span class="octicon octicon-link"></span></a>First steps</h1>
+
+<p>This will add the current user denoted by the <code class="language-plaintext highlighter-rouge">$USER</code> indicator to the docker group. Once this is done we can enable this by restarting the terminal.</p>
+
+<p>Now that we have docker setup we can pull down a basic container to test whether the system is working. To do this we will pull down the base ubuntu image. This image is large but can be utilised later as a base for your own containers so the download is not wasted, the command to run is</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull ubuntu:latest
+</code></pre></div></div>
+
+<p>The latest statement after the semicolon is to retrieve the latest ubuntu version on docker hub. This dwnload will take a bit to run. Once it is complete we can verify we have the docker image by running:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker images
+</code></pre></div></div>
+
+<p>This will list all the downloaded docker images. If we wish to remove these images we can run:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DO NOT KNOW THE COMMAND
+</code></pre></div></div>
+
+<p>We can see the Ubuntu image is available and we can start the docker container with:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it ubuntu:latest
+</code></pre></div></div>
+
+<p>We have two flags here -i and -t which can be combined as they are shown here to increase readability. The i flag indicates interactive and the -t indicates terminal. We can confirm the docker container is running as our prompt will change from the system location to</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@&lt;alphanumeric_string&gt;
+</code></pre></div></div>
+
+<p>We can use many of the commands that would be used in a standard linux system including <code class="language-plaintext highlighter-rouge">cd</code>, <code class="language-plaintext highlighter-rouge">ls</code>, <code class="language-plaintext highlighter-rouge">mkdir</code>. However we can note that the default docker containers are setup with root access and no additional user. We will fix this later in the tutorial.</p>
+
+<p>We can exit out of the docker container with <code class="language-plaintext highlighter-rouge">ctrl -d</code>. The major feature of a docker container is that the system is non persistent so whenever the container is exited no state is saved. For instance if you ran <code class="language-plaintext highlighter-rouge">apt install wget</code> in your instance then closed the docker container. Newt time you ran the container you would not have this package. We can fix this using a dockerfile. An introduction to dockerfiles will be shown below. Before we get there we can do some more things in prebuilt containers with out an issue. One thing we may want to do is utilise a docker container such as <code class="language-plaintext highlighter-rouge">https://hub.docker.com/r/jupyter/datascience-notebook/</code>. This container is a Jupyter notebook stack for running datascience projects.</p>
+
+<p>We can download it with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull jupyter/datascience-notebook
+</code></pre></div></div>
+
+<p>The cool thing about this container is we can port forward (send to the main machine) the jupyter notebook. The host computer is then able to run the jupyter notebook in the browser just like normal. The difference is that you are on a different machine. An issue that occurs with our non persistant docker containers is that we can no longer save files in the container for use at another stage. How do we get around this. In docker we have another flag known as <code class="language-plaintext highlighter-rouge">-v</code> or volumes. We setup our run script as shown, using the previously downloaded datascience docker image. To allow access to the notebook on the host machine we also use the <code class="language-plaintext highlighter-rouge">-p</code> flag and forward port <code class="language-plaintext highlighter-rouge">10000:5000</code>``</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run --rm -p 10000:5000 -e JUPYTER_ENABLE_LAB=yes -v "$PWD":/home/jovyan/work jupyter/datascience-notebook:9b06df75e445
+</code></pre></div></div>
+
+<p>The command above points the host folder found in /home/<my_python_folder> to the destination or docker container location ~/<python_folder>. Thus allowing us to save any of our python scripts in a persistant and accessible folder for later. Docker also allows us to create volumes external to docker and point to these in the container thus seperating host and client files.</python_folder></my_python_folder></p>
+
+<h2 id="building-your-own-containers">
+<a class="anchor" href="#building-your-own-containers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building your own containers</h2>
+
+<p>There comes a time when you want to add certain features to your container that is not inbuilt in the image for example you may want to implement some machine learning and your python container only contains the main python libraries. You don’t want to run pip install torch everytime you want to do anything. To overcome this we can build a dockerfile. This is basically a recipe for building a docker image. Below is an example docker image to implement machine learning using pytorch.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## Taken from https://github.com/anibali/docker-pytorch  ::: Many other images around with similar setups
+FROM nvidia/cuda:11.0-base-ubuntu20.04
+
+# Install some basic utilities
+RUN apt-get update &amp;&amp; apt-get install -y \
+    curl \
+    ca-certificates \
+    sudo \
+    git \
+    bzip2 \
+    libx11-6 \
+ &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+# Create a working directory
+RUN mkdir /app
+WORKDIR /app
+
+# Create a non-root user and switch to it
+RUN adduser --disabled-password --gecos '' --shell /bin/bash user \
+ &amp;&amp; chown -R user:user /app
+RUN echo "user ALL=(ALL) NOPASSWD:ALL" &gt; /etc/sudoers.d/90-user
+USER user
+
+# All users can use /home/user as their home directory
+ENV HOME=/home/user
+RUN chmod 777 /home/user
+
+# Install Miniconda and Python 3.8
+ENV CONDA_AUTO_UPDATE_CONDA=false
+ENV PATH=/home/user/miniconda/bin:$PATH
+RUN curl -sLo ~/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh \
+ &amp;&amp; chmod +x ~/miniconda.sh \
+ &amp;&amp; ~/miniconda.sh -b -p ~/miniconda \
+ &amp;&amp; rm ~/miniconda.sh \
+ &amp;&amp; conda install -y python==3.8.3 \
+ &amp;&amp; conda clean -ya
+
+# CUDA 11.0-specific steps
+RUN conda install -y -c pytorch \
+    cudatoolkit=11.0.221 \
+    "pytorch=1.7.0=py3.8_cuda11.0.221_cudnn8.0.3_0" \
+    "torchvision=0.8.1=py38_cu110" \
+ &amp;&amp; conda clean -ya
+
+# Set the default command to python3
+CMD ["python3"]
+</code></pre></div></div>
+
+<p>Much of the code can be read as standard linux commands with an added docker recipe command. We can run through the dockerfile step by step to further flesh out the commands. If you wish to skip over this section jump to ###HYPERLINK TO END###.</p>
+
+<p>The first command is</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM nvidia/cuda:11.0-base-ubuntu20.04
+</code></pre></div></div>
+<p>This is pointing the docker image to a base image which in itself is a compiled docker image from another source. It is possible to run a bare minimum docker image calling <code class="language-plaintext highlighter-rouge">FROM scratch</code> which will have nothing installed and you add everything you need to the image. We often want the functionality of a previously designed base for certain reasons in this case we are pulling from nvidias cuda build saving us the time of installation of CUDA in our own container.</p>
+
+<p>Each docker command creates a layer allowing you to roll back or change setup without having to redownload from the start.</p>
+
+<p>The next steps are to install basic utilities and create and move into a working directory.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#install some basic utilities
+RUN apt-get update &amp;&amp; apt-get install -y \
+    curl \
+    ca-certificates \
+    sudo \
+    git \
+    bzip2 \
+    libx11-6 \
+ &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+# Create a working directory
+RUN mkdir /app
+WORKDIR /app
+</code></pre></div></div>
+
+<p>The command RUN tells the docker container to run a linux command and WORKDIR sets the current folder.</p>
+
+<p>We then can add and modify users using</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Create a non-root user and switch to it
+RUN adduser --disabled-password --gecos '' --shell /bin/bash user \
+ &amp;&amp; chown -R user:user /app
+RUN echo "user ALL=(ALL) NOPASSWD:ALL" &gt; /etc/sudoers.d/90-user
+USER user
+</code></pre></div></div>
+
+<p>We can begin to see that the commands are exactly like you would do in setting up your own install on  a machine. The next steps create the home directory, add environment variables and install Miniconda with a python environment.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#All users can use /home/user as their home directory
+ENV HOME=/home/user
+RUN chmod 777 /home/user
+
+# Install Miniconda and Python 3.8
+ENV CONDA_AUTO_UPDATE_CONDA=false
+ENV PATH=/home/user/miniconda/bin:$PATH
+RUN curl -sLo ~/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh \
+ &amp;&amp; chmod +x ~/miniconda.sh \
+ &amp;&amp; ~/miniconda.sh -b -p ~/miniconda \
+ &amp;&amp; rm ~/miniconda.sh \
+ &amp;&amp; conda install -y python==3.8.3 \
+ &amp;&amp; conda clean -ya
+</code></pre></div></div>
+
+<p>We can string commands together with the &amp;&amp; command create a single layer following a set install stage. It is of note that if these become to large if for what ever reason the installation fails it will fall back to the previous known layer. For example if the miniconda installation fails the system will revert to the layer where the environment variables are set.</p>
+
+<p>Finally the dockerfile installs torch and additional utilies before cleaning up with:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># CUDA 11.0-specific steps
+RUN conda install -y -c pytorch \
+    cudatoolkit=11.0.221 \
+    "pytorch=1.7.0=py3.8_cuda11.0.221_cudnn8.0.3_0" \
+    "torchvision=0.8.1=py38_cu110" \
+ &amp;&amp; conda clean -ya
+</code></pre></div></div>
+
+<p>The last command in a dockerfile is usually CMD to execute a program at each docker run command. In this situation we have</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CMD ["python3"]
+</code></pre></div></div>
+
+<h2 id="going-further">
+<a class="anchor" href="#going-further" aria-hidden="true"><span class="octicon octicon-link"></span></a>Going further</h2>
+
+<p>But wait if we are installing all these packages how did we get access to a jupyter notebook. We can setup a nice jupyter lab environment with the below code. This can be placed as the last block in your dockerfile to start the Jupyter lab.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - &amp;&amp; \
+    apt-get update &amp;&amp; \
+    apt-get install -y nodejs &amp;&amp; \
+    rm -rf /var/lib/apt/lists/* &amp;&amp; \
+    apt-get clean &amp;&amp; \
+    pip3 install jupyter jupyterlab==2.2.9 --verbose &amp;&amp; \
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager
+    
+RUN jupyter lab --generate-config
+RUN python3 -c "from notebook.auth.security import set_password; set_password('', '/root/.jupyter/jupyter_notebook_config.json')"
+
+CMD /bin/bash -c "jupyter lab --ip 0.0.0.0 --port 8888 --allow-root &amp;&gt; /var/log/jupyter.log" &amp; \
+	echo "allow 10 sec for JupyterLab to start @ http://$(hostname -I | cut -d' ' -f1):8888 (password nvidia)" &amp;&amp; \
+	echo "JupterLab logging location:  /var/log/jupyter.log  (inside the container)" &amp;&amp; \
+	/bin/bash
+</code></pre></div></div>
+
+<h2 id="outside-of-software-development">
+<a class="anchor" href="#outside-of-software-development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Outside of Software Development</h2>
+
+<p>There are many other things we can do with docker containers outside of software development. Below are a couple of examples of things we can do in a docker container.</p>
+
+<ul>
+  <li>https://hub.docker.com/r/linuxserver/plex  – A plex server</li>
+  <li>https://hub.docker.com/r/linuxserver/heimdall – Web Application /Docker image server</li>
+  <li>https://hub.docker.com/r/pihole/pihole – A Network wide ad blocker</li>
+  <li>https://hub.docker.com/r/linuxserver/lychee – Photo management tool</li>
+  <li>https://hub.docker.com/r/linuxserver/nextcloud – file storage similar to google drive.</li>
+  <li>https://hub.docker.com/r/linuxserver/pylon – IDE built with node.js (strictly software development but a web based containerised development environment.</li>
+  <li>https://hub.docker.com/r/rancher/rancher – Container management platform</li>
+  <li>https://awesomeopensource.com/project/gcgarner/IOTstack – Full IOT stack</li>
+</ul>
+
+<h2 id="getting-in-and-out-of-containers-and-shutting-down-a-docker-service">
+<a class="anchor" href="#getting-in-and-out-of-containers-and-shutting-down-a-docker-service" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting in and out of containers, and shutting down a docker service</h2>
+
+<h3 id="entering">
+<a class="anchor" href="#entering" aria-hidden="true"><span class="octicon octicon-link"></span></a>Entering</h3>
+
+<p>We often wish to run docker as a service and only access the environment when we need to. We can jump into a currently running docker image with the docker exec command:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker exec -t CONTAINER bash
+</code></pre></div></div>
+<p>CONTAINER is a currently running image.</p>
+
+<h3 id="exiting">
+<a class="anchor" href="#exiting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Exiting</h3>
+
+<p>We can exit out of docker containers without terminating them by using the <code class="language-plaintext highlighter-rouge">-d</code> flag during initialisation to put the container in a detached mode.</p>
+
+<h3 id="shutdown">
+<a class="anchor" href="#shutdown" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shutdown</h3>
+<p>We can shutdown a container using the kill command, gracefully shutting down the service</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker kill --signal=SIGTERM &lt;containerId&gt;
+</code></pre></div></div>
+
+<h2 id="final-notes">
+<a class="anchor" href="#final-notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Final Notes</h2>
+
+<p>Docker has many potential applications and features and we have barely scratched the surface of its full potential. We can see from this short overview that the container design makes for an excellent development environment with both interactive and non interactive setups.</p>
+
+
+  </div><a class="u-url" href="/qwertimers_blog/docker/2021/03/09/Getting-Started-with-Docker.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/qwertimers_blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/qwertimers_blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/qwertimers_blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An easy to use blogging platform with support for Jupyter Notebooks.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/fastai" title="fastai"><svg class="svg-icon grey"><use xlink:href="/qwertimers_blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/fastdotai" title="fastdotai"><svg class="svg-icon grey"><use xlink:href="/qwertimers_blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
